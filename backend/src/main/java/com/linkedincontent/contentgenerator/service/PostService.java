@@ -7,13 +7,13 @@ import com.linkedincontent.contentgenerator.model.Post;
 import com.linkedincontent.contentgenerator.model.User;
 import com.linkedincontent.contentgenerator.repository.PostRepository;
 import com.linkedincontent.contentgenerator.repository.UserRepository;
-import com.linkedincontent.contentgenerator.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -51,7 +51,18 @@ public class PostService {
 
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        return userPrincipal.getUser();
+        String clerkUserId = (String) authentication.getPrincipal();
+        
+        // Find or create user based on Clerk user ID
+        Optional<User> existingUser = userRepository.findByEmail(clerkUserId);
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        }
+        
+        // Create new user if not exists
+        User newUser = new User();
+        newUser.setName("User " + clerkUserId.substring(0, Math.min(8, clerkUserId.length())));
+        newUser.setEmail(clerkUserId); // Using clerk ID as email for now
+        return userRepository.save(newUser);
     }
 }
