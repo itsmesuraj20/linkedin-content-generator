@@ -33,11 +33,11 @@ RUN chown appuser:appgroup app.jar
 USER appuser
 
 # Expose the port your app runs on
-EXPOSE 8081
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8081/api/health || exit 1
+  CMD curl -f http://localhost:8080/api/health || exit 1
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the application with production profile
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
