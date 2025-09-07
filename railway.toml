@@ -1,6 +1,7 @@
 # Railway Configuration - Deploy Backend from Root
 [build]
   provider = "dockerfile"
+  dockerfilePath = "Dockerfile"
 
 [deploy]
   startCommand = "java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar app.jar"

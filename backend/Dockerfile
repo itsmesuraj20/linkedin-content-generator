@@ -1,5 +1,5 @@
-# Multi-stage build for optimized Docker image
-FROM maven:3.8.6-openjdk-17-slim AS build
+# Multi-stage build using standard images
+FROM maven:3.9-openjdk-17 AS build
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Production stage
-FROM openjdk:17-jre-slim AS production
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
@@ -27,4 +27,4 @@ COPY --from=build /app/target/content-generator-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 
 # Run the application with production profile
-ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dserver.port=$PORT", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
