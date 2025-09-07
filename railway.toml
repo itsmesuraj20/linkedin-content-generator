@@ -1,6 +1,6 @@
-# Railway Build Configuration
+# Railway Configuration - Deploy Backend from Root
 [build]
-  command = "cd backend && mvn clean package -DskipTests"
+  provider = "dockerfile"
 
-[start]
-  command = "cd backend && java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar target/content-generator-0.0.1-SNAPSHOT.jar"
+[deploy]
+  startCommand = "java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar app.jar"
