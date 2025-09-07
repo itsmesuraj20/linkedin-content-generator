@@ -1,5 +1,5 @@
-# Use the same Docker build but from root
-FROM maven:3.8.6-openjdk-17-slim AS build
+# Multi-stage build using standard images
+FROM maven:3.9-openjdk-17 AS build
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Production stage
-FROM openjdk:17-jre-slim AS production
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
