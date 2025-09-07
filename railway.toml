@@ -1,0 +1,6 @@
+# Railway Build Configuration
+[build]
+  command = "cd backend && mvn clean package -DskipTests"
+
+[start]
+  command = "cd backend && java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar target/content-generator-0.0.1-SNAPSHOT.jar"
