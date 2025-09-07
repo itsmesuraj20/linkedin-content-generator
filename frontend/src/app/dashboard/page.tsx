@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect } from 'react';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { postApi, GeneratePostResponse } from '@/lib/api-types';
@@ -10,15 +10,26 @@ import PostCard from '@/components/PostCard';
 import { Sparkles, Send } from 'lucide-react';
 
 export default function Dashboard() {
-  const { isAuthenticated } = useAuth();
+  const { isSignedIn, getToken } = useAuth();
+  const { user } = useUser();
   const router = useRouter();
   const [topic, setTopic] = useState('');
   const [tone, setTone] = useState<'professional' | 'casual' | 'storytelling'>('professional');
   const [generatedPosts, setGeneratedPosts] = useState<string[]>([]);
   const [currentRequest, setCurrentRequest] = useState<{ topic: string; tone: string } | null>(null);
 
+  // Handle authentication redirect in useEffect
+  useEffect(() => {
+    if (isSignedIn === false) {
+      router.push('/sign-in');
+    }
+  }, [isSignedIn, router]);
+
   const generateMutation = useMutation({
-    mutationFn: postApi.generatePost,
+    mutationFn: async (data: { topic: string; tone: 'professional' | 'casual' | 'storytelling' }) => {
+      const token = await getToken();
+      return postApi.generatePost(data, token || undefined);
+    },
     onSuccess: (data: GeneratePostResponse) => {
       setGeneratedPosts(data.posts);
       setCurrentRequest({ topic: data.topic, tone: data.tone });
@@ -30,7 +41,10 @@ export default function Dashboard() {
   });
 
   const saveMutation = useMutation({
-    mutationFn: postApi.savePost,
+    mutationFn: async (data: { topic: string; tone: string; content: string }) => {
+      const token = await getToken();
+      return postApi.savePost(data, token || undefined);
+    },
     onSuccess: () => {
       alert('Post saved successfully!');
     },
@@ -40,9 +54,18 @@ export default function Dashboard() {
     },
   });
 
-  if (!isAuthenticated) {
-    router.push('/login');
-    return null;
+  // Show loading or return null while authentication is being checked
+  if (isSignedIn === false) {
+    return null; // Will redirect in useEffect
+  }
+
+  // Show loading state while Clerk is still determining auth status
+  if (isSignedIn === undefined) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   const handleGenerate = (e: React.FormEvent) => {
@@ -81,7 +104,7 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Generate LinkedIn Content
+            Welcome back, {user?.firstName || 'there'}!
           </h1>
           <p className="text-lg text-gray-600">
             Enter a topic and choose your tone to create engaging LinkedIn posts

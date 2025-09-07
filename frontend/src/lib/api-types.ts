@@ -1,28 +1,9 @@
-import api from './api';
+import api, { createAuthenticatedApi } from './api';
 
 export interface User {
   id: number;
   name: string;
   email: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  type: string;
-  id: number;
-  name: string;
-  email: string;
-}
-
-export interface RegisterData {
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface LoginData {
-  email: string;
-  password: string;
 }
 
 export interface GeneratePostData {
@@ -50,31 +31,22 @@ export interface Post {
   createdAt: string;
 }
 
-export const authApi = {
-  register: async (data: RegisterData): Promise<AuthResponse> => {
-    const response = await api.post('/auth/register', data);
-    return response.data;
-  },
-
-  login: async (data: LoginData): Promise<AuthResponse> => {
-    const response = await api.post('/auth/login', data);
-    return response.data;
-  },
-};
-
 export const postApi = {
-  generatePost: async (data: GeneratePostData): Promise<GeneratePostResponse> => {
-    const response = await api.post('/generate-post', data);
+  generatePost: async (data: GeneratePostData, token?: string): Promise<GeneratePostResponse> => {
+    const apiInstance = token ? createAuthenticatedApi(token) : api;
+    const response = await apiInstance.post('/generate-post', data);
     return response.data;
   },
 
-  savePost: async (data: SavePostData): Promise<Post> => {
-    const response = await api.post('/posts/save', data);
+  savePost: async (data: SavePostData, token?: string): Promise<Post> => {
+    const apiInstance = token ? createAuthenticatedApi(token) : api;
+    const response = await apiInstance.post('/posts/save', data);
     return response.data;
   },
 
-  getHistory: async (): Promise<Post[]> => {
-    const response = await api.get('/posts/history');
+  getHistory: async (token?: string): Promise<Post[]> => {
+    const apiInstance = token ? createAuthenticatedApi(token) : api;
+    const response = await apiInstance.get('/posts/history');
     return response.data;
   },
 };

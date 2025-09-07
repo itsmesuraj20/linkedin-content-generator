@@ -1,20 +1,13 @@
 'use client';
 
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser, SignOutButton } from '@clerk/nextjs';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { LogOut, PenTool, History, User } from 'lucide-react';
 
 const Navbar = () => {
-  const { user, logout, isAuthenticated } = useAuth();
-  const router = useRouter();
+  const { user, isSignedIn } = useUser();
 
-  const handleLogout = () => {
-    logout();
-    router.push('/');
-  };
-
-  if (!isAuthenticated) {
+  if (!isSignedIn) {
     return null;
   }
 
@@ -49,14 +42,15 @@ const Navbar = () => {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <User className="h-5 w-5 text-gray-500" />
-                <span className="text-sm text-gray-700">{user?.name}</span>
+                <span className="text-sm text-gray-700">
+                  {user?.firstName} {user?.lastName}
+                </span>
               </div>
-              <button
-                onClick={handleLogout}
-                className="text-gray-500 hover:text-red-600 p-2 rounded-md transition-colors"
-              >
-                <LogOut className="h-5 w-5" />
-              </button>
+              <SignOutButton>
+                <button className="text-gray-500 hover:text-red-600 p-2 rounded-md transition-colors">
+                  <LogOut className="h-5 w-5" />
+                </button>
+              </SignOutButton>
             </div>
           </div>
         </div>

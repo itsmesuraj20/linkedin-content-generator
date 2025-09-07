@@ -1,24 +1,20 @@
 'use client';
 
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser, SignedIn, SignedOut } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { PenTool, Sparkles, Users, Zap } from 'lucide-react';
 
 export default function Home() {
-  const { isAuthenticated } = useAuth();
+  const { isSignedIn } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isSignedIn) {
       router.push('/dashboard');
     }
-  }, [isAuthenticated, router]);
-
-  if (isAuthenticated) {
-    return null; // Will redirect to dashboard
-  }
+  }, [isSignedIn, router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -33,18 +29,28 @@ export default function Home() {
               </span>
             </div>
             <div className="flex space-x-4">
-              <Link
-                href="/login"
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Login
-              </Link>
-              <Link
-                href="/register"
-                className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
-              >
-                Get Started
-              </Link>
+              <SignedOut>
+                <Link
+                  href="/sign-in"
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Get Started
+                </Link>
+              </SignedOut>
+              <SignedIn>
+                <Link
+                  href="/dashboard"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Dashboard
+                </Link>
+              </SignedIn>
             </div>
           </div>
         </div>
@@ -64,18 +70,28 @@ export default function Home() {
             choose your tone, and let our AI create professional posts that engage your audience.
           </p>
           <div className="flex justify-center space-x-4">
-            <Link
-              href="/register"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
-            >
-              Start Creating
-            </Link>
-            <Link
-              href="/login"
-              className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors"
-            >
-              Login
-            </Link>
+            <SignedOut>
+              <Link
+                href="/sign-up"
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Start Creating
+              </Link>
+              <Link
+                href="/sign-in"
+                className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors"
+              >
+                Sign In
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <Link
+                href="/dashboard"
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Go to Dashboard
+              </Link>
+            </SignedIn>
           </div>
         </div>
       </div>
@@ -136,12 +152,22 @@ export default function Home() {
           <p className="text-xl mb-8 text-blue-100">
             Join thousands of professionals who are already creating engaging content with AI.
           </p>
-          <Link
-            href="/register"
-            className="bg-white text-blue-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors inline-block"
-          >
-            Get Started for Free
-          </Link>
+          <SignedOut>
+            <Link
+              href="/sign-up"
+              className="bg-white text-blue-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors inline-block"
+            >
+              Get Started for Free
+            </Link>
+          </SignedOut>
+          <SignedIn>
+            <Link
+              href="/dashboard"
+              className="bg-white text-blue-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors inline-block"
+            >
+              Go to Dashboard
+            </Link>
+          </SignedIn>
         </div>
       </div>
 

@@ -1,27 +1,46 @@
 'use client';
 
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { postApi, Post } from '@/lib/api-types';
 import Navbar from '@/components/Navbar';
 import { Copy, Calendar, Tag, FileText } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function HistoryPage() {
-  const { isAuthenticated } = useAuth();
+  const { isSignedIn, getToken } = useAuth();
   const router = useRouter();
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
+  // Handle authentication redirect in useEffect
+  useEffect(() => {
+    if (isSignedIn === false) {
+      router.push('/sign-in');
+    }
+  }, [isSignedIn, router]);
+
   const { data: posts, isLoading, error } = useQuery({
     queryKey: ['posts-history'],
-    queryFn: postApi.getHistory,
-    enabled: isAuthenticated,
+    queryFn: async () => {
+      const token = await getToken();
+      return postApi.getHistory(token || undefined);
+    },
+    enabled: isSignedIn === true,
   });
 
-  if (!isAuthenticated) {
-    router.push('/login');
-    return null;
+  // Show loading or return null while authentication is being checked
+  if (isSignedIn === false) {
+    return null; // Will redirect in useEffect
+  }
+
+  // Show loading state while Clerk is still determining auth status
+  if (isSignedIn === undefined) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   const handleCopy = async (content: string, postId: number) => {
