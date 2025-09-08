@@ -1,30 +1,27 @@
-# Multi-stage build using standard images
-FROM maven:3.9-openjdk-17 AS build
+# Use official OpenJDK runtime as base image
+FROM openjdk:17-jdk-slim
 
+# Set working directory
 WORKDIR /app
 
-# Copy pom.xml first for better Docker layer caching
-COPY pom.xml .
+# Copy Maven wrapper and pom.xml first for better caching
+COPY mvnw pom.xml ./
+COPY .mvn .mvn
 
-# Download dependencies
-RUN mvn dependency:go-offline -B
+# Make mvnw executable
+RUN chmod +x mvnw
+
+# Download dependencies (this will be cached if pom.xml doesn't change)
+RUN ./mvnw dependency:go-offline -B
 
 # Copy source code
-COPY src ./src
+COPY src src
 
 # Build the application
-RUN mvn clean package -DskipTests
+RUN ./mvnw clean package -DskipTests
 
-# Production stage
-FROM eclipse-temurin:17-jre
-
-WORKDIR /app
-
-# Copy the built JAR from the build stage
-COPY --from=build /app/target/content-generator-0.0.1-SNAPSHOT.jar app.jar
-
-# Expose the port your app runs on
+# Expose port
 EXPOSE 8080
 
-# Run the application with production profile
-ENTRYPOINT ["java", "-Dserver.port=$PORT", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+# Run the jar file
+CMD ["java", "-jar", "target/linkedin-content-generator-0.0.1-SNAPSHOT.jar"]
