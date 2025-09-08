@@ -18,28 +18,42 @@ git remote add origin https://github.com/YOUR_USERNAME/linkedin-content-generato
 git push -u origin main
 ```
 
-### 2. Deploy Backend on Railway (FREE)
+## Backend Deployment Options
 
-1. **Sign up at [Railway.app](https://railway.app)**
-2. **Connect GitHub** and select your repository
-3. **Select the backend folder** or create a new service
-4. **Add Environment Variables:**
-   ```
-   GEMINI_API_KEY=AIzaSyAzND3kqePK8DDuatRqBj0TkTa21qrnB-8
-   JWT_SECRET=your-super-secret-jwt-key-here
-   CORS_ORIGINS=https://your-frontend-url.vercel.app
-   SPRING_PROFILES_ACTIVE=prod
-   ```
+We'll provide multiple deployment options to ensure success.
 
-5. **Add PostgreSQL Database:**
-   - Go to your project dashboard
-   - Click "New" → "Database" → "PostgreSQL"
-   - Railway will automatically set DATABASE_URL
+### Option 1: Railway (Recommended)
 
-6. **Deploy Settings:**
-   - Root Directory: `/backend`
+Railway is a modern platform with automatic builds and free PostgreSQL.
+
+#### Setup Railway Account
+1. Go to [Railway.app](https://railway.app)
+2. Sign up with GitHub (free)
+3. Connect your GitHub repository
+
+#### Deploy Backend
+1. Click "New Project"
+2. Select "Deploy from GitHub repo"
+3. Choose this repository
+4. Railway will auto-detect the Java/Maven project (we've included `nixpacks.toml`)
+5. Wait for the build to complete
+
+### Option 2: Render.com (Alternative)
+
+If Railway doesn't work, Render.com is another excellent free option.
+
+#### Setup Render Account
+1. Go to [Render.com](https://render.com)
+2. Sign up with GitHub (free)
+3. Connect your GitHub repository
+
+#### Deploy Backend
+1. Click "New Web Service"
+2. Connect to this repository
+3. Use these settings:
+   - Runtime: Docker
    - Build Command: `mvn clean package -DskipTests`
-   - Start Command: `java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar target/content-generator-0.0.1-SNAPSHOT.jar`
+   - Start Command: `java -jar target/linkedin-content-generator-0.0.1-SNAPSHOT.jar`
 
 ### 3. Deploy Frontend on Vercel (FREE)
 
