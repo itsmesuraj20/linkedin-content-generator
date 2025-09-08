@@ -1,0 +1,11 @@
+[providers]
+java = "17"
+
+[phases.build]
+cmds = ["mvn clean package -DskipTests"]
+
+[phases.start]
+cmd = "java -jar target/*.jar"
+
+[variables]
+MAVEN_OPTS = "-Xmx2048m"
