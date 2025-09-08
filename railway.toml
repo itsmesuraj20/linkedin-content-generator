@@ -1,7 +1,9 @@
 # Railway Configuration - Deploy Backend from Root
 [build]
-  provider = "dockerfile"
-  dockerfilePath = "Dockerfile"
+builder = "nixpacks"
 
 [deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 300
+restartPolicyType = "never"
   startCommand = "java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar app.jar"
