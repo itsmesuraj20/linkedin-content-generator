@@ -13,7 +13,8 @@ public class SavePostRequest {
     private String content;
 
     // Constructors
-    public SavePostRequest() {}
+    public SavePostRequest() {
+    }
 
     public SavePostRequest(String topic, String tone, String content) {
         this.topic = topic;

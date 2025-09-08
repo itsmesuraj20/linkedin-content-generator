@@ -34,13 +34,13 @@ public class PostService {
 
     public Post savePost(SavePostRequest request) {
         User currentUser = getCurrentUser();
-        
+
         Post post = new Post();
         post.setUser(currentUser);
         post.setTopic(request.getTopic());
         post.setTone(request.getTone());
         post.setContent(request.getContent());
-        
+
         return postRepository.save(post);
     }
 
@@ -52,13 +52,13 @@ public class PostService {
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String clerkUserId = (String) authentication.getPrincipal();
-        
+
         // Find or create user based on Clerk user ID
         Optional<User> existingUser = userRepository.findByEmail(clerkUserId);
         if (existingUser.isPresent()) {
             return existingUser.get();
         }
-        
+
         // Create new user if not exists
         User newUser = new User();
         newUser.setName("User " + clerkUserId.substring(0, Math.min(8, clerkUserId.length())));

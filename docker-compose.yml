@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # PostgreSQL Database
@@ -24,7 +24,7 @@ services:
 
   # Backend Spring Boot Application
   backend:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: linkedin-backend
@@ -52,7 +52,7 @@ services:
 
   # Frontend Next.js Application
   frontend:
-    build: 
+    build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: linkedin-frontend

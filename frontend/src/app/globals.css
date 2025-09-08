@@ -26,11 +26,14 @@ body {
 }
 
 /* Ensure form inputs have proper visibility */
-input, textarea, select {
+input,
+textarea,
+select {
   color: #1f2937 !important;
   background-color: #ffffff !important;
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: #6b7280 !important;
 }

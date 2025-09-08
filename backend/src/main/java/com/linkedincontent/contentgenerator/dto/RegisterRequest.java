@@ -18,7 +18,8 @@ public class RegisterRequest {
     private String password;
 
     // Constructors
-    public RegisterRequest() {}
+    public RegisterRequest() {
+    }
 
     public RegisterRequest(String name, String email, String password) {
         this.name = name;

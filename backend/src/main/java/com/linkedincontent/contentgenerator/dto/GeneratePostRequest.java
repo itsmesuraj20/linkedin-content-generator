@@ -8,12 +8,12 @@ public class GeneratePostRequest {
     private String topic;
 
     @NotBlank(message = "Tone is required")
-    @Pattern(regexp = "professional|casual|storytelling", 
-             message = "Tone must be one of: professional, casual, storytelling")
+    @Pattern(regexp = "professional|casual|storytelling", message = "Tone must be one of: professional, casual, storytelling")
     private String tone;
 
     // Constructors
-    public GeneratePostRequest() {}
+    public GeneratePostRequest() {
+    }
 
     public GeneratePostRequest(String topic, String tone) {
         this.topic = topic;

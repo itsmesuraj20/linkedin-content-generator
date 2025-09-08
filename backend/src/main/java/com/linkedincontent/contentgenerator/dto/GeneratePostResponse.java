@@ -7,7 +7,8 @@ public class GeneratePostResponse {
     private String topic;
     private String tone;
 
-    public GeneratePostResponse() {}
+    public GeneratePostResponse() {
+    }
 
     public GeneratePostResponse(List<String> posts, String topic, String tone) {
         this.posts = posts;
