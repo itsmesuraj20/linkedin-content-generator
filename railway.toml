@@ -1,6 +1,7 @@
 # Railway Configuration - Deploy Backend from Root
 [build]
-builder = "nixpacks"
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 healthcheckPath = "/api/health"
