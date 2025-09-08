@@ -1,11 +1,11 @@
-[providers]
-java = "17"
+providers = ["java"]
+
+[variables]
+JAVA_VERSION = "17"
+MAVEN_OPTS = "-Xmx2048m"
 
 [phases.build]
 cmds = ["mvn clean package -DskipTests"]
 
 [phases.start]
 cmd = "java -jar target/*.jar"
-
-[variables]
-MAVEN_OPTS = "-Xmx2048m"
