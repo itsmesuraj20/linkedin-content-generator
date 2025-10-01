@@ -49,9 +49,4 @@ public class PostController {
             return ResponseEntity.badRequest().body("Failed to retrieve posts: " + e.getMessage());
         }
     }
-
-    @GetMapping("/health")
-    public ResponseEntity<String> health() {
-        return ResponseEntity.ok("API is running!");
-    }
 }

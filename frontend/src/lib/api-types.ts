@@ -31,6 +31,36 @@ export interface Post {
     createdAt: string;
 }
 
+export interface LoginRequest {
+    email: string;
+    password: string;
+}
+
+export interface RegisterRequest {
+    name: string;
+    email: string;
+    password: string;
+}
+
+export interface AuthResponse {
+    token: string;
+    id: number;
+    name: string;
+    email: string;
+}
+
+export const authApi = {
+    login: async (data: LoginRequest): Promise<AuthResponse> => {
+        const response = await api.post('/auth/login', data);
+        return response.data;
+    },
+
+    register: async (data: RegisterRequest): Promise<AuthResponse> => {
+        const response = await api.post('/auth/register', data);
+        return response.data;
+    },
+};
+
 export const postApi = {
     generatePost: async (data: GeneratePostData, token?: string): Promise<GeneratePostResponse> => {
         const apiInstance = token ? createAuthenticatedApi(token) : api;
