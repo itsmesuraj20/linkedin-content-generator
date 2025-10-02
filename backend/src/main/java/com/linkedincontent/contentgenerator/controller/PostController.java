@@ -36,10 +36,9 @@ public class PostController {
             // Simple test response without calling Gemini API
             GeneratePostResponse response = new GeneratePostResponse();
             response.setPosts(java.util.Arrays.asList(
-                "Test post 1 for topic: " + request.getTopic() + " with tone: " + request.getTone(),
-                "Test post 2 for topic: " + request.getTopic() + " with tone: " + request.getTone(),
-                "Test post 3 for topic: " + request.getTopic() + " with tone: " + request.getTone()
-            ));
+                    "Test post 1 for topic: " + request.getTopic() + " with tone: " + request.getTone(),
+                    "Test post 2 for topic: " + request.getTopic() + " with tone: " + request.getTone(),
+                    "Test post 3 for topic: " + request.getTopic() + " with tone: " + request.getTone()));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to generate test posts: " + e.getMessage());
